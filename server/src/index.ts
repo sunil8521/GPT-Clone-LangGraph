@@ -46,7 +46,7 @@ app.use(session({
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Must be false on localhost HTTP!
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' required for cross-domain cookies
-        // domain: ".your-domain.com" // UNCOMMENT THIS when you buy your custom domain! Do NOT use .onrender.com!
+        domain: ".onrender.com"
     }
 }));
 
