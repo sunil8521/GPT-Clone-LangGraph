@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.DB as string
 
 app.use(cors({
-    origin: ["http://localhost:5173"],
+    origin: [process.env.CLIENT as string],
     credentials: true
 }));
 app.use(express.json({ limit: "10kb" }));
