@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { FiMessageSquare, FiPlus, FiSettings, FiUser, FiSend, FiMenu, FiX, FiLogOut } from 'react-icons/fi';
+import { FiMessageSquare, FiPlus, FiUser, FiSend, FiMenu, FiLogOut } from 'react-icons/fi';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { useChatStore } from '../store/useChatStore';

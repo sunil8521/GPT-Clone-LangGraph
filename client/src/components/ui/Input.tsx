@@ -1,12 +1,12 @@
-import { InputHTMLAttributes, useState } from 'react';
+import type { InputHTMLAttributes } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-
+import { useState } from 'react';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
 export function Input({ label, type = 'text', className = '', ...props }: InputProps) {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<Boolean>(false);
   const isPassword = type === 'password';
   const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
