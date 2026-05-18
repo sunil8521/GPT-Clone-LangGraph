@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import axios from 'axios';
 
 axios.defaults.withCredentials = true; // IMPORTANT for auth!
-const API_URL = import.meta.env.VITE_SERVERURL;
+const API_URL = `${import.meta.env.VITE_SERVERURL}/api`;
 
 interface ChatSession {
   _id: string;

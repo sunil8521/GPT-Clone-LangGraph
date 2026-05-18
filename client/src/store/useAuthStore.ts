@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import axios from 'axios';
 
 axios.defaults.withCredentials = true; // VERY IMPORTANT to send cookies with requests
-const API_URL = import.meta.env.VITE_SERVERURL;
+const API_URL = `${import.meta.env.VITE_SERVERURL}/api`;
 
 interface User {
   id: string;
