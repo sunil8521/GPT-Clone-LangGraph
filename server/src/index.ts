@@ -3,8 +3,6 @@ import "dotenv/config";
 import cors from "cors";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import path from "path";
-import { fileURLToPath } from "url";
 
 import { connectDB } from "./db.js";
 import authRouter from "./routes/auth.js";
@@ -13,9 +11,9 @@ import { initializeAgent } from "./agent.js";
 
 // Setup Types for express-session
 declare module "express-session" {
-  interface SessionData {
-    userId: string;
-  }
+    interface SessionData {
+        userId: string;
+    }
 }
 
 const app = express();
@@ -23,7 +21,7 @@ const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.DB as string
 
 app.use(cors({
-    origin: true, // Allow the same origin
+    origin: [process.env.CLIENT as string],
     credentials: true
 }));
 app.use(express.json({ limit: "10kb" }));
@@ -46,7 +44,9 @@ app.use(session({
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production"
+        secure: process.env.NODE_ENV === "production", // Must be false on localhost HTTP!
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' required for cross-domain cookies
+        // domain: ".your-domain.com" // UNCOMMENT THIS when you buy your custom domain! Do NOT use .onrender.com!
     }
 }));
 
@@ -54,18 +54,8 @@ app.use(session({
 app.use("/api/auth", authRouter);
 app.use("/api/chats", chatRouter);
 
-// ----------------------------------------------------
-// MONOLITHIC DEPLOYMENT: SERVE REACT FRONTEND
-// ----------------------------------------------------
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// 1. Tell Express to serve the static files from your React build folder
-app.use(express.static(path.join(__dirname, "../../client/dist")));
-
-// 2. Any other route should serve the React index.html so React Router takes over!
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../../client/dist/index.html"));
+app.get("/", (req, res) => {
+    res.json({ success: true, message: "GPT Clone API is running" });
 });
 
 // Boot Server
