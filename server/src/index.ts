@@ -27,6 +27,10 @@ app.use(cors({
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true }));
 
+// Trust proxy is required if you are behind a load balancer (like Render/Railway)
+// otherwise secure cookies will not be set!
+app.set("trust proxy", 1);
+
 // Setup Express Session
 app.use(session({
     secret: process.env.SESSION_SECRET as string,
@@ -40,7 +44,8 @@ app.use(session({
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" // Must be false on localhost HTTP!
+        secure: process.env.NODE_ENV === "production", // Must be false on localhost HTTP!
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // 'none' required for cross-domain cookies
     }
 }));
 
