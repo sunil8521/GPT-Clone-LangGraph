@@ -73,7 +73,7 @@ authRouter.get("/me", async (req, res): Promise<any> => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
-
+    
 authRouter.post("/logout", (req, res): any => {
     req.session.destroy((err) => {
         if (err) {
