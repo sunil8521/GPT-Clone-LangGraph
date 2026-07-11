@@ -63,10 +63,17 @@ authRouter.get("/me", async (req, res): Promise<any> => {
     }
 });
 
-authRouter.post("/logout", (req, res) => {
-    req.session.destroy(() => {
-        res.clearCookie("connect.sid"); // <--- This deletes the cookie from the browser!
-        res.json({ success: true, message: "Logged out" });
+authRouter.post("/logout", (req, res): any => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: "Failed to destroy session" });
+        }
+        res.clearCookie("connect.sid", {
+            path: '/',
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        });
+        return res.json({ success: true, message: "Logged out completely" });
     });
 });
 

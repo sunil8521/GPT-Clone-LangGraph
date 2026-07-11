@@ -36,6 +36,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     store: MongoStore.create({
         mongoUrl: MONGODB_URI,
         dbName: "gpt_clone",
@@ -46,7 +47,6 @@ app.use(session({
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Must be false on localhost HTTP!
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' required for cross-domain cookies
-        domain: ".onrender.com"
     }
 }));
 
