@@ -31,6 +31,17 @@ authRouter.post("/", async (req, res): Promise<any> => {
         // Setup Express Session
         if (req.session) {
             req.session.userId = user._id.toString();
+            return req.session.save((err) => {
+                if (err) {
+                    console.error("Session save error:", err);
+                    return res.status(500).json({ success: false, message: "Session error" });
+                }
+                return res.json({ 
+                    success: true, 
+                    message: "Authenticated successfully",
+                    user: { id: user._id, email: user.email }
+                });
+            });
         }
 
         return res.json({ 

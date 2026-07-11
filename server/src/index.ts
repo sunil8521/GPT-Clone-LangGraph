@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Trust proxy is required if you are behind a load balancer (like Render/Railway)
 // otherwise secure cookies will not be set!
-app.set("trust proxy", 1);
+app.set("trust proxy", true);
 
 // Setup Express Session
 app.use(session({
