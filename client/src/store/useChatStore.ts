@@ -89,17 +89,25 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
     try {
       const res = await axios.post(`${API_URL}/chats/${threadId}/message`, { message: content });
-      if (res.data.success) {
+      if (res.data.success && res.data.message) {
         // Add AI response to UI
         set((state) => ({
           currentMessages: [...state.currentMessages, { role: 'ai', content: res.data.message }]
         }));
         // Refetch sidebar in case the title was updated (first message sent)
         get().fetchSidebarChats();
+      } else {
+        const fallbackMessage = res.data?.message || "Unable to answer right now. Please try again.";
+        set((state) => ({
+          currentMessages: [...state.currentMessages, { role: 'ai', content: fallbackMessage }]
+        }));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to send message', error);
-      // Could show an error toast here
+      const fallbackMessage = error?.response?.data?.message || "Unable to answer right now. Please try again.";
+      set((state) => ({
+        currentMessages: [...state.currentMessages, { role: 'ai', content: fallbackMessage }]
+      }));
     } finally {
       set({ isGenerating: false });
     }

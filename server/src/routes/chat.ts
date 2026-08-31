@@ -98,7 +98,22 @@ chatRouter.post("/:threadId/message", async (req, res): Promise<any> => {
         );
 
         // Get the latest AI response
-        const latestResponse = result.messages[result.messages.length - 1];
+        const latestResponse = result?.messages?.[result.messages.length - 1];
+
+        let responseText = "Unable to answer right now. Please try again.";
+        if (latestResponse && latestResponse.content) {
+            if (typeof latestResponse.content === "string" && latestResponse.content.trim().length > 0) {
+                responseText = latestResponse.content;
+            } else if (Array.isArray(latestResponse.content)) {
+                const combined = latestResponse.content
+                    .map((c: any) => (typeof c === "string" ? c : c.text || ""))
+                    .join("")
+                    .trim();
+                if (combined.length > 0) {
+                    responseText = combined;
+                }
+            }
+        }
 
         // Update the chat's 'updatedAt' field (and conditionally its title if it's "New Chat")
         let updateData: any = { updatedAt: new Date() };
@@ -111,12 +126,12 @@ chatRouter.post("/:threadId/message", async (req, res): Promise<any> => {
 
         res.json({ 
             success: true, 
-            message: latestResponse.content 
+            message: responseText 
         });
 
     } catch (error) {
         console.error("Agent Error:", error);
-        res.status(500).json({ success: false, message: "Failed to communicate with AI" });
+        res.status(500).json({ success: false, message: "Unable to answer right now. Please try again." });
     }
 });
 
