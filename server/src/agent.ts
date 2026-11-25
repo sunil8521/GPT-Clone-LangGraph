@@ -11,7 +11,8 @@ export const initializeAgent = () => {
     checkpointer = new MongoDBSaver({ client: nativeClient as any, dbName: "gpt_clone" });
 
     const llm = new ChatGoogle({
-        model: "gemini-flash-latest",
+        model: "gemini-3.7-flash",
+        platformType:"gcp",
         apiKey: process.env.GOOGLE_API_KEY as string
 
     });
